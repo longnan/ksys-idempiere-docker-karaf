@@ -92,3 +92,9 @@ Please download them from:
 	https://sourceforge.net/projects/idempiereksys/files/idempiere-ksys/
 
 	
+Pending Issues
+----
+Remove web-fragment.xml from org.zkoss.zk.library\lib\zk.jar
+https://bugs.eclipse.org/bugs/show_bug.cgi?id=442488
+Multiple servlets map to path: /zkau/*: auEngine,DHtmlUpdateServlet
+
