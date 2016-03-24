@@ -110,11 +110,6 @@ RUN mv /tmp/ksys/idempiere.properties /opt/idempiere-ksys/;
 RUN unzip -d /opt/idempiere-ksys /tmp/ksys/idempiereServer.gtk.linux.x86_64.zip
 RUN rm /tmp/ksys/idempiereServer.gtk.linux.x86_64.zip
 
-# Setup ksys-bundles folder, copy all idempiere eclipse plugins/* to ksys-bundles
-# ksys-idempiere karaf feature will start needed bundles from this folder
-RUN mkdir /opt/idempiere-ksys/ksys-bundles
-RUN cp -v -r -f /opt/idempiere-ksys/idempiere.gtk.linux.x86_64/idempiere-server/plugins/* /opt/idempiere-ksys/ksys-bundles/
-
 # Copy ksys-repository to karaf, this folder will be added as defaultRepositories for karaf
 RUN unzip -d /opt/idempiere-ksys /tmp/ksys/ksys-repository-${IDEMPIERE_VERSION}-on-karaf-${KARAF_VERSION}.zip
 RUN rm /tmp/ksys/ksys-repository-${IDEMPIERE_VERSION}-on-karaf-${KARAF_VERSION}.zip
