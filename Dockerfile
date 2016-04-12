@@ -38,7 +38,7 @@ ADD ksys /tmp/ksys
 RUN mkdir /opt/idempiere-ksys;
 
 # Default ENV 
-ENV IDEMPIERE_VERSION 3.1.0
+ENV IDEMPIERE_VERSION 4.0.0
 ENV JDK8_FILE jdk-8u74-linux-x64.tar.gz
 ENV KARAF_VERSION 4.0.4
 ENV KARAF_FILE apache-karaf-${KARAF_VERSION}.tar.gz
@@ -70,10 +70,6 @@ ENV PATH $JAVA_HOME/bin:$PATH
 ENV JAVA_MIN_MEM 256M
 # Maximum memory for the JVM
 ENV JAVA_MAX_MEM 1024M
-# Minimum perm memory for the JVM, support was removed in 8.0
-ENV JAVA_PERM_MEM 128M
-# Maximum memory for the JVM, support was removed in 8.0
-ENV JAVA_MAX_PERM_MEM 256M
 
 # Enabling SSH
 RUN rm -f /etc/service/sshd/down

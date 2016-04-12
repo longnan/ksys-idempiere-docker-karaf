@@ -1,7 +1,7 @@
 ksys-idempiere-docker-karaf
 =======================
 
-Base docker image to run iDempiere-KSYS (v3.1) inside Apache Karaf
+Base docker image to run iDempiere-KSYS (v4.0 dev) inside Apache Karaf
 
 Usage
 -----
@@ -75,8 +75,8 @@ To SSH container:
 	ssh -i insecure_key root@$(docker inspect -f "{{ .NetworkSettings.IPAddress }}" ksys-idempiere-karaf)
 
 	# Install iDempiere-KSYS feature manually in Karaf:
-	karaf@root()> feature:repo-add mvn:com.kylinsystems.idempiere/com.kylinsystems.idempiere.karaf.feature/3.1.0/xml/features
-	karaf@root()> feature:install -v com.kylinsystems.idempiere.all
+	karaf@root()> feature:repo-add mvn:com.kylinsystems.idempiere.karaf/com.kylinsystems.idempiere.karaf.feature/4.0.0/xml/features
+	karaf@root()> feature:install -v com.kylinsystems.idempiere.karaf.all
 
 Other Packages
 ----
