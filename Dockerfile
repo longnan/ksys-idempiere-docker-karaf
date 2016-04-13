@@ -38,7 +38,7 @@ ADD ksys /tmp/ksys
 RUN mkdir /opt/idempiere-ksys;
 
 # Default ENV 
-ENV IDEMPIERE_VERSION 4.0.0
+ENV IDEMPIERE_VERSION 3.1.0
 ENV JDK8_FILE jdk-8u74-linux-x64.tar.gz
 ENV KARAF_VERSION 4.0.4
 ENV KARAF_FILE apache-karaf-${KARAF_VERSION}.tar.gz

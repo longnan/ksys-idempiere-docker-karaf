@@ -4,7 +4,7 @@
 
   <groupId>com.ksys.idempiere.docker</groupId>
   <artifactId>ksys-idempiere-docker-karaf</artifactId>
-  <version>4.0.0.20160411</version>
+  <version>3.1.0.20160312</version>
   <packaging>pom</packaging>
   <name>ksys-idempiere-docker-karaf</name>
 </project>
