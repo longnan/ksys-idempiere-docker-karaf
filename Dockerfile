@@ -39,7 +39,7 @@ RUN mkdir /opt/idempiere-ksys;
 
 # Default ENV 
 ENV IDEMPIERE_VERSION 4.0.0
-ENV JDK8_FILE jdk-8u74-linux-x64.tar.gz
+ENV JDK8_FILE jdk-8u92-linux-x64.tar.gz
 ENV KARAF_VERSION 4.0.5
 ENV KARAF_FILE apache-karaf-${KARAF_VERSION}.tar.gz
 		 
@@ -92,6 +92,7 @@ RUN rm /tmp/ksys/${KARAF_FILE}
 
 # Update karaf etc configuration
 RUN mv /tmp/ksys/etc/custom.properties /opt/idempiere-ksys/etc;
+RUN mv /tmp/ksys/etc/karaf_maven_settings.xml /opt/idempiere-ksys/etc;
 RUN mv /tmp/ksys/etc/org.ops4j.pax.url.mvn.cfg /opt/idempiere-ksys/etc;
 #RUN mv /tmp/ksys/etc/org.apache.karaf.features.cfg /opt/idempiere-ksys/etc;
 
