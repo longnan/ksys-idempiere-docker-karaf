@@ -76,7 +76,8 @@ To SSH container:
 
 	# Install iDempiere-KSYS feature manually in Karaf:
 	karaf@root()> feature:repo-add mvn:com.kylinsystems.idempiere.karaf/com.kylinsystems.idempiere.karaf.feature/4.0.0/xml/features
-	karaf@root()> feature:install -v com.kylinsystems.idempiere.karaf.all
+	karaf@root()> feature:install -v com.kylinsystems.idempiere.karaf.base
+	karaf@root()> feature:install -v com.kylinsystems.idempiere.karaf.app
 
 Other Packages
 ----
@@ -94,7 +95,12 @@ Please download them from:
 	
 Pending Issues
 ----
-Remove web-fragment.xml from org.zkoss.zk.library\lib\zk.jar
-https://bugs.eclipse.org/bugs/show_bug.cgi?id=442488
-Multiple servlets map to path: /zkau/*: auEngine,DHtmlUpdateServlet
+1. Remove web-fragment.xml from zk.jar (hacked zk.jar included)
+	https://bugs.eclipse.org/bugs/show_bug.cgi?id=442488
+	Multiple servlets map to path: /zkau/*: auEngine,DHtmlUpdateServlet
+
+2. Replace MANIFEST.MF in idempiere zk ui due to atmosphere-runtime issue
+
+3. override-web.xml not working in Karaf Jetty
+
 
