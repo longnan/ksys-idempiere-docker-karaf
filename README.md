@@ -42,7 +42,7 @@ To check the container log:
 
 To re-start the container from last stop:	
 
-	docker start ksys-idempiere-karaf
+	docker start ksys-idempiere-pgsql
 	docker start ksys-idempiere-karaf
 
 To access idempiere web-ui:
@@ -103,4 +103,25 @@ Pending Issues
 
 3. override-web.xml not working in Karaf Jetty
 
+SSL for Karaf Jetty
+----
+	$openssl genrsa -aes128 -out ksys-server-demo.key 1024
+		
+P@ssw0rd
+
+	$openssl req -new -key ksys-server-demo.key -out ksys-server-demo.csr
+
+-----
+Country Name (2 letter code) [AU]:CN
+State or Province Name (full name) [Some-State]:Shanghai
+Locality Name (eg, city) []:Shanghai
+Organization Name (eg, company) [Internet Widgits Pty Ltd]:KSYS
+Organizational Unit Name (eg, section) []:iDempiere
+Common Name (e.g. server FQDN or YOUR name) []:demo.idempiere.ksys
+Email Address []:
+
+	$openssl x509 -req -days 3650 -in ksys-server-demo.csr -signkey ksys-server-demo.key -out ksys-server-demo.crt
+	$openssl pkcs12 -inkey ksys-server-demo.key -in ksys-server-demo.crt -export -out ksys-server-demo.pkcs12
+	$keytool -importkeystore -srckeystore ksys-server-demo.pkcs12 -srcstoretype PKCS12 -destkeystore ksys-demo-keystore
+	$keytool -list -v -keystore ksys-demo-keystore
 
