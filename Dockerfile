@@ -5,7 +5,7 @@
 #
 
 # Pull base image.
-FROM phusion/baseimage:0.9.18
+FROM phusion/baseimage:0.9.19
 MAINTAINER Ken Longnan <ken.longnan@gmail.com>
 
 # Make default locale
@@ -39,12 +39,10 @@ RUN mkdir /opt/idempiere-ksys;
 
 # Default ENV 
 ENV IDEMPIERE_VERSION 4.0.0
-ENV JDK8_FILE jdk-8u92-linux-x64.tar.gz
+ENV JDK8_FILE jdk-8u102-linux-x64.tar.gz
 ENV KARAF_VERSION 4.0.5
 ENV KARAF_FILE apache-karaf-${KARAF_VERSION}.tar.gz
-		 
-# Install openJDK 7
-#RUN apt-get install -q -y openjdk-7-jre-headless openjdk-7-jdk
+
 
 # Install oracle JDK 8 (online model)
 #RUN DEBIAN_FRONTEND=noninteractive apt-get install -y software-properties-common
@@ -76,9 +74,8 @@ RUN rm -f /etc/service/sshd/down
 # Enabling the insecure key permanently. In production environments, you should use your own keys.
 RUN /usr/sbin/enable_insecure_key
 
-# Install needed tools & postgresql-client (optional)
+# Install needed tools & packages
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y wget unzip pwgen expect
-#RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --force-yes postgresql-client-9.3
 
 # Install Apache Karaf (online model)
 #ENV KARAF_VERSION 4.0.1
@@ -117,7 +114,7 @@ ENV IDEMPIERE_HOME /opt/idempiere-ksys/
 # Clean tmp/ksys
 RUN rm -rf /tmp/ksys
 
-EXPOSE 1099 8181 8101 44444
+EXPOSE 1099 8181 8443 8101 44444
 
 # Use baseimage-docker's init system.
 CMD ["/sbin/my_init"]

@@ -58,6 +58,7 @@ To access idempiere web-ui:
 
 	# Hawtio Console:
 	http://docker-host-ip/hawtio/
+	https://localhost:8443/hawtio
 
 	# Karaf Webconsole
 	http://docker-host-ip/system/console
