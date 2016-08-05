@@ -43,6 +43,10 @@ ENV JDK8_FILE jdk-8u102-linux-x64.tar.gz
 ENV KARAF_VERSION 4.0.5
 ENV KARAF_FILE apache-karaf-${KARAF_VERSION}.tar.gz
 
+# Setup IDEMPIERE_HOME (karaf_home)
+ENV IDEMPIERE_HOME /opt/idempiere-ksys/
+ENV KARAF_HOME ${IDEMPIERE_HOME}
+
 
 # Install oracle JDK 8 (online model)
 #RUN DEBIAN_FRONTEND=noninteractive apt-get install -y software-properties-common
@@ -65,7 +69,7 @@ RUN rm /tmp/ksys/${JDK8_FILE};
 ENV JAVA_HOME /usr/lib/jvm/jdk1.8.0/
 ENV PATH $JAVA_HOME/bin:$PATH
 # Minimum memory for the JVM
-ENV JAVA_MIN_MEM 256M
+ENV JAVA_MIN_MEM 512M
 # Maximum memory for the JVM
 ENV JAVA_MAX_MEM 1024M
 
@@ -87,37 +91,51 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y wget unzip pwgen expect
 RUN tar --strip-components=1 -C /opt/idempiere-ksys -xzvf /tmp/ksys/${KARAF_FILE}
 RUN rm /tmp/ksys/${KARAF_FILE}
 
-# Update karaf etc configuration
-RUN mv /tmp/ksys/etc/custom.properties /opt/idempiere-ksys/etc;
-RUN mv /tmp/ksys/etc/karaf_maven_settings.xml /opt/idempiere-ksys/etc;
-RUN mv /tmp/ksys/etc/org.ops4j.pax.url.mvn.cfg /opt/idempiere-ksys/etc;
-#RUN mv /tmp/ksys/etc/org.apache.karaf.features.cfg /opt/idempiere-ksys/etc;
+# Setup and configure Karaf to support SSL + http2, add features for iDempiere-KSYS
+RUN mv /tmp/ksys/etc/custom.properties ${KARAF_HOME}/etc;
+RUN mv /tmp/ksys/etc/karaf_maven_settings.xml ${KARAF_HOME}/etc;
+RUN mv /tmp/ksys/etc/org.ops4j.pax.url.mvn.cfg ${KARAF_HOME}/etc;
+RUN mv /tmp/ksys/etc/org.ops4j.pax.web.cfg ${KARAF_HOME}/etc;
+#RUN mv /tmp/ksys/etc/org.apache.karaf.features.cfg ${KARAF_HOME}/etc;
+RUN mv /tmp/ksys/etc/jetty.xml /${KARAF_HOME}/etc;
+# Add SSL Keystore
+RUN mv /tmp/ksys/etc/ksys-demo-keystore ${KARAF_HOME}/etc;
+#RUN mv /tmp/ksys/etc/users.properties /karaf/etc/
 
-# Add karaf rebranding jar 
-# Customization for ksys-idempiere rebranding
-RUN mv /tmp/ksys/com.kylinsystems.idempiere.karaf.branding-${IDEMPIERE_VERSION}.jar /opt/idempiere-ksys/lib/;
+# Add iDempiere-KSYS rebranding jar into Karaf
+RUN mv /tmp/ksys/com.kylinsystems.idempiere.karaf.branding-${IDEMPIERE_VERSION}.jar ${KARAF_HOME}/lib/;
 
-# Add idempiere-ksys properties file as default
-RUN mv /tmp/ksys/idempiere.properties /opt/idempiere-ksys/;
+#ENV KARAF_OPTS "-Djava.net.preferIPv4Stack=true"
+#ENV KARAF_OPTS -javaagent:/$KARAF_HOME/jolokia-agent.jar=host=0.0.0.0,port=8778,authMode=jaas,realm=karaf,user=admin,password=admin,agentId=$HOSTNAME
+ENV PATH $PATH:${KARAF_HOME}/bin
 
-# Copy idempiere-server package, only plugins/* will be needed for karaf
-RUN unzip -d /opt/idempiere-ksys /tmp/ksys/idempiereServer.gtk.linux.x86_64.zip
+# Add default iDempiere-KSYS properties files
+RUN mv /tmp/ksys/idempiere.properties ${IDEMPIERE_HOME};
+RUN mv /tmp/ksys/home.properties ${IDEMPIERE_HOME};
+
+# Copy whole idempiere-server package, only folder plugins/* will be needed for karaf
+RUN unzip -d ${IDEMPIERE_HOME} /tmp/ksys/idempiereServer.gtk.linux.x86_64.zip
 RUN rm /tmp/ksys/idempiereServer.gtk.linux.x86_64.zip
 
 # Copy ksys-repository to karaf, this folder will be added as defaultRepositories for karaf
-RUN unzip -d /opt/idempiere-ksys /tmp/ksys/ksys-repository-${IDEMPIERE_VERSION}-on-karaf-${KARAF_VERSION}.zip
+RUN unzip -d ${IDEMPIERE_HOME} /tmp/ksys/ksys-repository-${IDEMPIERE_VERSION}-on-karaf-${KARAF_VERSION}.zip
 RUN rm /tmp/ksys/ksys-repository-${IDEMPIERE_VERSION}-on-karaf-${KARAF_VERSION}.zip
 
-# Setup IDEMPIERE_HOME (karaf_home)
-ENV IDEMPIERE_HOME /opt/idempiere-ksys/
+# Apply ZK-Patch
+RUN mv /tmp/ksys/zk-patch/zk_8.0.1.1.jar ${IDEMPIERE_HOME}/idempiere.gtk.linux.x86_64/idempiere-server/plugins;
 
 # Clean tmp/ksys
 RUN rm -rf /tmp/ksys
 
 EXPOSE 1099 8181 8443 8101 44444
 
+# Add daemon to be run by runit.
+#RUN chmod +x ${KARAF_HOME}/bin/karaf
+RUN mkdir /etc/service/ksys-idempiere-karaf-server
+RUN ln -s ${KARAF_HOME}/bin/karaf /etc/service/ksys-idempiere-karaf-server/run
+
 # Use baseimage-docker's init system.
 CMD ["/sbin/my_init"]
 
 # Start iDempiere-KSYS Karaf
-#ENTRYPOINT ["/opt/idempiere-ksys/bin/karaf"]
+##ENTRYPOINT ["/opt/idempiere-ksys/bin/karaf"]

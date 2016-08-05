@@ -8,15 +8,15 @@ Usage
 
 To create the image `longnan/ksys-idempiere-docker-karaf`, execute the following command on the ksys-idempiere-docker-karaf folder:
 
-	docker build --rm --force-rm -t longnan/ksys-idempiere-docker-karaf:4.0.0.20160507 .
+	docker build --rm --force-rm -t longnan/ksys-idempiere-docker-karaf:4.0.0.20160730 .
 
 To save/load image:
 	
 	# save image to tarball
-	$ sudo docker save longnan/ksys-idempiere-docker-karaf:4.0.0.20160507 | gzip > ksys-idempiere-docker-karaf-4.0.0.20160507.tar.gz
+	$ sudo docker save longnan/ksys-idempiere-docker-karaf:4.0.0.20160730 | gzip > ksys-idempiere-docker-karaf-4.0.0.20160730.tar.gz
 
 	# load it back
-	$ sudo gzcat ksys-idempiere-docker-karaf-4.0.0.20160507.tar.gz | docker load
+	$ sudo gzcat ksys-idempiere-docker-karaf-4.0.0.20160730.tar.gz | docker load
 	
 Download prepared images from:
 
@@ -28,11 +28,11 @@ To run the image:
 	docker volume rm ksys-idempiere-pgsql-datastore
 	docker volume create --name ksys-idempiere-pgsql-datastore
 	docker volume inspect ksys-idempiere-pgsql-datastore
-	docker run -d --name="ksys-idempiere-pgsql" -v ksys-idempiere-pgsql-datastore:/data -p 5432:5432 -e PASS="postgres" longnan/ksys-idempiere-docker-pgsql:3.1.0.20160507
+	docker run -d --name="ksys-idempiere-pgsql" -v ksys-idempiere-pgsql-datastore:/data -p 5432:5432 -e PASS="postgres" longnan/ksys-idempiere-docker-pgsql:3.1.0.20160730
 	docker logs -f ksys-idempiere-pgsql
 	
 	# run ksys-idempiere-karaf
-	docker run -d -t --link ksys-idempiere-pgsql:idempiere-db --name="ksys-idempiere-karaf" -p 80:8181 -p 443:8443 longnan/ksys-idempiere-docker-karaf:4.0.0.20160507
+	docker run -d -t --link ksys-idempiere-pgsql:idempiere-db --name="ksys-idempiere-karaf" -p 80:8181 -p 443:8443 longnan/ksys-idempiere-docker-karaf:4.0.0.20160730
 	docker logs -f ksys-idempiere-karaf
 	
 To check the container log:
@@ -54,7 +54,7 @@ To access idempiere web-ui:
 	http://docker-host-ip/ADInterface/services/
 
 	# iDempiere Server Management:
-	http://docker-host-ip/server
+	http://docker-host-ip/idempiere.jsp
 
 	# Hawtio Console:
 	http://docker-host-ip/hawtio/
@@ -84,10 +84,10 @@ Other Packages
 ----
 The following packages are needed to build docker image, but too big to be committed to github
 	
-	jdk-8u74-linux-x64.tar.gz
+	jdk-8uxxx-linux-x64.tar.gz
 	idempiereServer.gtk.linux.x86_64.zip
-	apache-karaf-4.0.5.tar.gz
-	ksys-repository-4.0.0-on-karaf-4.0.5.zip
+	apache-karaf-4.0.x.tar.gz
+	ksys-repository-4.0.0-on-karaf-4.0.x.zip
 
 Please download them from:
 
@@ -103,6 +103,8 @@ Pending Issues
 2. Replace MANIFEST.MF in idempiere zk ui due to atmosphere-runtime issue
 
 3. override-web.xml not working in Karaf Jetty
+
+4. https://ops4j1.jira.com/browse/PAXWEB-959
 
 SSL for Karaf Jetty
 ----
