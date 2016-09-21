@@ -8,39 +8,39 @@ Usage
 
 To create the image `longnan/ksys-idempiere-docker-karaf`, execute the following command on the ksys-idempiere-docker-karaf folder:
 
-	docker build --rm --force-rm -t longnan/ksys-idempiere-docker-karaf:4.0.0.20160730 .
+	docker build --rm --force-rm -t longnan/ksys-idempiere-docker-karaf:4.0.0.yyyymmdd .
 
 To save/load image:
-	
+
 	# save image to tarball
-	$ sudo docker save longnan/ksys-idempiere-docker-karaf:4.0.0.20160730 | gzip > ksys-idempiere-docker-karaf-4.0.0.20160730.tar.gz
+	$ sudo docker save longnan/ksys-idempiere-docker-karaf:4.0.0.yyyymmdd | gzip > ksys-idempiere-docker-karaf-4.0.0.yyyymmdd.tar.gz
 
 	# load it back
-	$ sudo gzcat ksys-idempiere-docker-karaf-4.0.0.20160730.tar.gz | docker load
-	
+	$ sudo gzcat ksys-idempiere-docker-karaf-4.0.0.yyyymmdd.tar.gz | docker load
+
 Download prepared images from:
 
 	https://sourceforge.net/projects/idempiereksys/files/idempiere-ksys-docker-image/4.0/
 
 To run the image:
-	
+
 	# run ksys-idempiere-pgsql
 	docker volume rm ksys-idempiere-pgsql-datastore
 	docker volume create --name ksys-idempiere-pgsql-datastore
 	docker volume inspect ksys-idempiere-pgsql-datastore
-	docker run -d --name="ksys-idempiere-pgsql" -v ksys-idempiere-pgsql-datastore:/data -p 5432:5432 -e PASS="postgres" longnan/ksys-idempiere-docker-pgsql:3.1.0.20160730
+	docker run -d --name="ksys-idempiere-pgsql" -v ksys-idempiere-pgsql-datastore:/data -p 5432:5432 -e PASS="postgres" longnan/ksys-idempiere-docker-pgsql:3.1.0.yyyymmdd
 	docker logs -f ksys-idempiere-pgsql
-	
+
 	# run ksys-idempiere-karaf
-	docker run -d -t --link ksys-idempiere-pgsql:idempiere-db --name="ksys-idempiere-karaf" -p 80:8181 -p 443:8443 longnan/ksys-idempiere-docker-karaf:4.0.0.20160730
+	docker run -d -t --link ksys-idempiere-pgsql:idempiere-db --name="ksys-idempiere-karaf" -p 80:8181 -p 443:8443 longnan/ksys-idempiere-docker-karaf:4.0.0.yyyymmdd
 	docker logs -f ksys-idempiere-karaf
-	
+
 To check the container log:
 
 	docker logs ksys-idempiere-karaf
 	docker logs -f ksys-idempiere-karaf
 
-To re-start the container from last stop:	
+To re-start the container from last stop:
 
 	docker start ksys-idempiere-pgsql
 	docker start ksys-idempiere-karaf
@@ -48,13 +48,13 @@ To re-start the container from last stop:
 To access idempiere web-ui:
 
 	# iDempiere WebUI:
-	http://docker-host-ip/webui
+	http://docker-host-ip
 
 	# iDempiere WebService/ADInterface:
 	http://docker-host-ip/ADInterface/services/
 
 	# iDempiere Server Management:
-	http://docker-host-ip/idempiere.jsp
+	http://docker-host-ip/server
 
 	# Hawtio Console:
 	http://docker-host-ip/hawtio/
@@ -83,7 +83,7 @@ To SSH container:
 Other Packages
 ----
 The following packages are needed to build docker image, but too big to be committed to github
-	
+
 	jdk-8uxxx-linux-x64.tar.gz
 	idempiereServer.gtk.linux.x86_64.zip
 	apache-karaf-4.0.x.tar.gz
@@ -93,7 +93,7 @@ Please download them from:
 
 	https://sourceforge.net/projects/idempiereksys/files/idempiere-ksys/
 
-	
+
 Pending Issues
 ----
 1. Remove web-fragment.xml from zk.jar (hacked zk.jar included)
@@ -109,7 +109,7 @@ Pending Issues
 SSL for Karaf Jetty
 ----
 	$openssl genrsa -aes128 -out ksys-server-demo.key 1024
-		
+
 P@ssw0rd
 
 	$openssl req -new -key ksys-server-demo.key -out ksys-server-demo.csr
@@ -127,4 +127,3 @@ Email Address []:
 	$openssl pkcs12 -inkey ksys-server-demo.key -in ksys-server-demo.crt -export -out ksys-server-demo.pkcs12
 	$keytool -importkeystore -srckeystore ksys-server-demo.pkcs12 -srcstoretype PKCS12 -destkeystore ksys-demo-keystore
 	$keytool -list -v -keystore ksys-demo-keystore
-
